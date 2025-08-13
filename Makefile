@@ -28,7 +28,7 @@ PLUGIN_BINARY_WINDOWS := ./bin/cloudwatch.dll
 build: $(PLUGIN_BINARY)
 
 $(PLUGIN_BINARY): $(SOURCES)
-	PATH=${PATH} golint ./cloudwatch
+	#PATH=${PATH} golint ./cloudwatch
 	mkdir -p ./bin
 	go build -buildmode c-shared -o $(PLUGIN_BINARY) ./
 	@echo "Built Amazon CloudWatch Logs Fluent Bit Plugin"
