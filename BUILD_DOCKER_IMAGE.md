@@ -1,8 +1,6 @@
 # Build
 
 ```bash
-make
-
 docker build --no-cache -t udhos/aws-for-fluent-bit:2.33.1 .
 
 docker push udhos/aws-for-fluent-bit:2.33.1
@@ -11,7 +9,7 @@ docker push udhos/aws-for-fluent-bit:2.33.1
 # References
 
 ```bash
-docker run --rm -ti public.ecr.aws/aws-observability/aws-for-fluent-bit:2.33.1 sh
+docker run -v $PWD:/build --rm -ti public.ecr.aws/aws-observability/aws-for-fluent-bit:2.33.1 sh
 
 sh-4.2# find fluent-bit | grep cloud
 fluent-bit/configs/plugin-and-storage-metrics-to-cloudwatch.conf
