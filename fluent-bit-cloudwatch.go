@@ -71,6 +71,9 @@ func getConfiguration(ctx unsafe.Pointer, pluginID int) cloudwatch.OutputPluginC
 	config.LogGroupName = output.FLBPluginConfigKey(ctx, "log_group_name")
 	logrus.Infof("[cloudwatch %d] plugin parameter log_group_name = '%s'", pluginID, config.LogGroupName)
 
+	config.LogGroupClass = output.FLBPluginConfigKey(ctx, "log_group_class")
+	logrus.Infof("[cloudwatch %d] plugin parameter log_group_class = '%s'", pluginID, config.LogGroupClass)
+
 	config.DefaultLogGroupName = output.FLBPluginConfigKey(ctx, "default_log_group_name")
 	if config.DefaultLogGroupName == "" {
 		config.DefaultLogGroupName = "fluentbit-default"
