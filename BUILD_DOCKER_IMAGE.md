@@ -1,6 +1,8 @@
 # Build
 
 ```bash
+make clean
+
 docker build --no-cache -t udhos/aws-for-fluent-bit:2.33.1 .
 
 docker push udhos/aws-for-fluent-bit:2.33.1
