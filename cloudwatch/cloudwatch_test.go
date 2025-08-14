@@ -22,7 +22,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch/mock_cloudwatch"
 	"github.com/aws/amazon-kinesis-firehose-for-fluent-bit/plugins"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -31,6 +30,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/udhos/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch/mock_cloudwatch"
 )
 
 const (

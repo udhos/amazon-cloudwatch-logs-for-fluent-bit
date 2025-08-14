@@ -13,4 +13,4 @@
 
 package cloudwatch
 
-//go:generate ../scripts/mockgen.sh github.com/aws/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch LogsClient mock_cloudwatch/mock.go
+//go:generate ../scripts/mockgen.sh github.com/udhos/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch LogsClient mock_cloudwatch/mock.go

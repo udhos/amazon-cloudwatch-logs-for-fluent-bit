@@ -1,4 +1,4 @@
-module github.com/aws/amazon-cloudwatch-logs-for-fluent-bit
+module github.com/udhos/amazon-cloudwatch-logs-for-fluent-bit
 
 go 1.20
 
