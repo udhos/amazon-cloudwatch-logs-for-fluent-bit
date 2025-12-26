@@ -20,9 +20,9 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/aws/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch"
 	"github.com/aws/amazon-kinesis-firehose-for-fluent-bit/plugins"
 	"github.com/fluent/fluent-bit-go/output"
+	"github.com/udhos/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch"
 
 	"github.com/sirupsen/logrus"
 )
@@ -70,6 +70,9 @@ func getConfiguration(ctx unsafe.Pointer, pluginID int) cloudwatch.OutputPluginC
 
 	config.LogGroupName = output.FLBPluginConfigKey(ctx, "log_group_name")
 	logrus.Infof("[cloudwatch %d] plugin parameter log_group_name = '%s'", pluginID, config.LogGroupName)
+
+	config.LogGroupClass = output.FLBPluginConfigKey(ctx, "log_group_class")
+	logrus.Infof("[cloudwatch %d] plugin parameter log_group_class = '%s'", pluginID, config.LogGroupClass)
 
 	config.DefaultLogGroupName = output.FLBPluginConfigKey(ctx, "default_log_group_name")
 	if config.DefaultLogGroupName == "" {

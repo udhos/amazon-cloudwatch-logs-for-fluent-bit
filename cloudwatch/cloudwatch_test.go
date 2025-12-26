@@ -22,7 +22,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch/mock_cloudwatch"
 	"github.com/aws/amazon-kinesis-firehose-for-fluent-bit/plugins"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -31,6 +30,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
+	"github.com/udhos/amazon-cloudwatch-logs-for-fluent-bit/cloudwatch/mock_cloudwatch"
 )
 
 const (
@@ -51,6 +51,27 @@ type configTest struct {
 
 var (
 	configValidationTestCases = []configTest{
+		{
+			name: "ValidConfigurationWithLogGroupClass",
+			config: OutputPluginConfig{
+				Region:          testRegion,
+				LogGroupName:    testLogGroup,
+				LogStreamPrefix: testLogStreamPrefix,
+				LogGroupClass:   "INFREQUENT_ACCESS",
+			},
+			isValidConfig: true,
+		},
+		{
+			name: "InvalidLogGroupClass",
+			config: OutputPluginConfig{
+				Region:          testRegion,
+				LogGroupName:    testLogGroup,
+				LogStreamPrefix: testLogStreamPrefix,
+				LogGroupClass:   "INVALID_CLASS",
+			},
+			isValidConfig: false,
+			expectedError: "log_group_class must be either empty or one of: STANDARD, INFREQUENT_ACCESS",
+		},
 		{
 			name: "ValidConfiguration",
 			config: OutputPluginConfig{
@@ -1027,6 +1048,58 @@ func setupTimeout() *plugins.Timeout {
 		os.Exit(1)
 	})
 	return timer
+}
+
+func TestCreateLogGroupWithLogGroupClass(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockCloudWatch := mock_cloudwatch.NewMockLogsClient(ctrl)
+
+	output := OutputPlugin{
+		client:          mockCloudWatch,
+		logGroupClass:   "INFREQUENT_ACCESS",
+		autoCreateGroup: true,
+	}
+
+	input := &cloudwatchlogs.CreateLogGroupInput{
+		LogGroupName:  aws.String(testLogGroup),
+		LogGroupClass: aws.String("INFREQUENT_ACCESS"),
+	}
+
+	mockCloudWatch.EXPECT().CreateLogGroup(input).Return(&cloudwatchlogs.CreateLogGroupOutput{}, nil)
+
+	e := &Event{
+		group: testLogGroup,
+	}
+
+	err := output.createLogGroup(e)
+	assert.NoError(t, err)
+}
+
+func TestCreateLogGroupWithoutLogGroupClass(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockCloudWatch := mock_cloudwatch.NewMockLogsClient(ctrl)
+
+	output := OutputPlugin{
+		client:          mockCloudWatch,
+		autoCreateGroup: true,
+	}
+
+	input := &cloudwatchlogs.CreateLogGroupInput{
+		LogGroupName: aws.String(testLogGroup),
+	}
+
+	mockCloudWatch.EXPECT().CreateLogGroup(input).Return(&cloudwatchlogs.CreateLogGroupOutput{}, nil)
+
+	e := &Event{
+		group: testLogGroup,
+	}
+
+	err := output.createLogGroup(e)
+	assert.NoError(t, err)
 }
 
 func TestValidate(t *testing.T) {
